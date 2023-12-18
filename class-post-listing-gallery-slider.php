@@ -49,7 +49,7 @@ class Post_Listing_Gallery_Slider {
 	 * @return void
 	 */
 	public function plgs_load_css_js() {
-		include 'inc/views/class-load-css-js.php';
+		// include 'inc/admin/class-admin-load-css-js.php';
 	}
 }
 
