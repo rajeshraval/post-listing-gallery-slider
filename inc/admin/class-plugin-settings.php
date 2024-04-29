@@ -12,6 +12,13 @@ class PluginSettings {
 	 */
 	public $pagename;
 	/**
+	 * setting_menu_page
+	 *
+	 * @var mixed
+	 */
+	public $setting_menu_page;
+
+	/**
 	 * Method __construct
 	 *
 	 * @return void
@@ -42,7 +49,7 @@ class PluginSettings {
 	 * @return void
 	 */
 	public function plgs_add_admin_menu() {
-		add_menu_page(
+		$this->setting_menu_page = add_menu_page(
 			__( 'Post List Slider Settings', 'plgs' ),
 			__( 'Post List Slider Settings', 'plgs' ),
 			'manage_options',
@@ -51,6 +58,9 @@ class PluginSettings {
 			'dashicons-slides',
 			25
 		);
+
+		add_action( 'admin_print_scripts-' . $this->setting_menu_page, array( $this, 'plgs_load_js_for_settings' ) );
+		add_action( 'admin_print_styles-' . $this->setting_menu_page, array( $this, 'plgs_load_css_for_settings' ) );
 	}
 
 	/**
@@ -59,9 +69,17 @@ class PluginSettings {
 	 * @return void
 	 */
 	public function plgs_load_plugin_settins() {
-		if ( get_query_var( 'page' ) === $this->pagename ) {
-			include PLUGIN_VIEWS_DIR_PATH . 'class-load-plugin-settings.php';
-		}
+		include plugin_dir_path( __FILE__ ) . 'templates/plgs-settings-template.php';
+	}
+
+	public function plgs_load_js_for_settings() {
+		wp_register_script( 'custom-plgs-settings-js', plugin_dir_url( __FILE__ ) . 'assets/js/plgs-custom-admin-settings.js', array( 'jquery' ), true );
+		wp_enqueue_script( 'custom-plgs-settings-js' );
+	}
+
+	public function plgs_load_css_for_settings() {		
+		wp_register_style( 'custom-plgs-settings-css', plugin_dir_url( __FILE__ ) . 'assets/css/plgs-custom-admin-settings.css');
+		wp_enqueue_style( 'custom-plgs-settings-css' );
 	}
 }
 
